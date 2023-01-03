@@ -9,17 +9,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-public interface PolicyController<T extends PolicyDTO<ID>, ID> {
+public sealed abstract class PolicyController<T extends PolicyDTO<ID>, ID> permits PessoaController, EnderecoController {
 
     @PostMapping
-    ResponseEntity<T> create(T dto, UriComponentsBuilder uriComponentsBuilder);
+    public abstract ResponseEntity<T> create(T dto, UriComponentsBuilder uriComponentsBuilder);
 
     @PutMapping(path = "/{id}")
-    ResponseEntity<T> update(T dto);
+    public abstract ResponseEntity<T> update(T dto);
 
     @GetMapping(path = "/{id}")
-    ResponseEntity<T> find(ID id);
+    public abstract ResponseEntity<T> find(ID id);
 
     @GetMapping
-    ResponseEntity<List<T>> findAll();
+    public abstract ResponseEntity<List<T>> findAll();
 }
+

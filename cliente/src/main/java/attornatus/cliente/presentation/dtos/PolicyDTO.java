@@ -1,4 +1,3 @@
 package attornatus.cliente.presentation.dtos;
 
-public interface PolicyDTO<ID> {
-}
+public sealed interface PolicyDTO<ID> permits PessoaDTO, EnderecoDTO { }
