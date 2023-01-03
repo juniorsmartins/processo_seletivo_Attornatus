@@ -2,11 +2,15 @@ package attornatus.cliente.presentation.controllers;
 
 import attornatus.cliente.presentation.dtos.PessoaDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-public class PessoaController implements PolicyController<PessoaDTO, Long> {
+@RestController
+@RequestMapping(value = "v1/pessoas", produces = {"application/json"})
+public final class PessoaController extends PolicyController<PessoaDTO, Long> {
 
     @Override
     public ResponseEntity<PessoaDTO> create(PessoaDTO dto, UriComponentsBuilder uriComponentsBuilder) {

@@ -2,11 +2,15 @@ package attornatus.cliente.presentation.controllers;
 
 import attornatus.cliente.presentation.dtos.EnderecoDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-public class EnderecoController implements PolicyController<EnderecoDTO, Long> {
+@RestController
+@RequestMapping(value = "v1/enderecos", produces = {"application/json"})
+public final class EnderecoController extends PolicyController<EnderecoDTO, Long> {
 
     @Override
     public ResponseEntity<EnderecoDTO> create(EnderecoDTO dto, UriComponentsBuilder uriComponentsBuilder) {
