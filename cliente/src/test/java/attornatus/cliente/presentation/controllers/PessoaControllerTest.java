@@ -29,6 +29,7 @@ class PessoaControllerTest {
     private final int NUMERO = 1550;
     private final TipoEnderecoEnum TIPO1 = TipoEnderecoEnum.PRINCIPAL;
     private final TipoEnderecoEnum TIPO2 = TipoEnderecoEnum.SECUNDARIO;
+    private final String CIDADE = "Nova York";
     private final String NOME = "Robert Cecil Martin";
     private final LocalDate DATA_NASCIMENTO = LocalDate.of(1952, 12, 05);
 
@@ -56,6 +57,7 @@ class PessoaControllerTest {
                 .cep(CEP)
                 .numero(NUMERO)
                 .tipo(TIPO1)
+                .cidade(CIDADE)
                 .build();
 
         pessoaEntity1 = PessoaEntity.builder()
@@ -64,8 +66,8 @@ class PessoaControllerTest {
                 .enderecos(List.of(enderecoEntity1))
                 .build();
 
-        enderecoDTO = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO1);
-        enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO2);
+        enderecoDTO = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO1, CIDADE);
+        enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO2, CIDADE);
         pessoaDTO1 = new PessoaDTO(null, NOME, DATA_NASCIMENTO, List.of(enderecoDTO, enderecoDTO1));
     }
 

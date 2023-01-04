@@ -7,6 +7,7 @@ import attornatus.cliente.persistence.EnderecoRepositoryJPA;
 import attornatus.cliente.persistence.PessoaRepositoryJPA;
 import attornatus.cliente.presentation.dtos.EnderecoDTO;
 import attornatus.cliente.presentation.dtos.PessoaDTO;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +29,7 @@ class EnderecoControllerTest {
     private final int NUMERO = 1550;
     private final TipoEnderecoEnum TIPO1 = TipoEnderecoEnum.PRINCIPAL;
     private final TipoEnderecoEnum TIPO2 = TipoEnderecoEnum.SECUNDARIO;
+    private final String CIDADE = "Nova York";
     private final String NOME = "Robert Cecil Martin";
     private final LocalDate DATA_NASCIMENTO = LocalDate.of(1952, 12, 05);
 
@@ -54,6 +56,7 @@ class EnderecoControllerTest {
                 .cep(CEP)
                 .numero(NUMERO)
                 .tipo(TIPO1)
+                .cidade(CIDADE)
                 .build();
 
         pessoaEntity1 = PessoaEntity.builder()
@@ -62,7 +65,7 @@ class EnderecoControllerTest {
                 .enderecos(List.of(enderecoEntity1))
                 .build();
 
-        enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO2);
+        enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO2, CIDADE);
     }
 
     @Test
@@ -83,6 +86,8 @@ class EnderecoControllerTest {
         Assertions.assertEquals(LOGRADOURO, response.getBody().logradouro());
         Assertions.assertEquals(CEP, response.getBody().cep());
         Assertions.assertEquals(NUMERO, response.getBody().numero());
+        Assertions.assertEquals(TIPO2, response.getBody().tipo());
+        Assertions.assertEquals(CIDADE, response.getBody().cidade());
 
         this.pessoaRepositoryJPA.deleteById(pessoaId);
     }
