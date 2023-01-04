@@ -15,7 +15,7 @@ public sealed abstract class PolicyPessoaController<T extends PolicyDTO<ID>, ID>
     public abstract ResponseEntity<T> create(T dto, UriComponentsBuilder uriComponentsBuilder);
 
     @PutMapping(path = "/{id}")
-    public abstract ResponseEntity<T> update(T dto);
+    public abstract ResponseEntity<T> update(ID id, T dto);
 
     @GetMapping(path = "/{id}")
     public abstract ResponseEntity<T> findById(ID id);

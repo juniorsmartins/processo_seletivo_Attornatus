@@ -24,19 +24,24 @@ import java.util.List;
 @SpringBootTest
 class PessoaControllerTest {
 
-    private final String LOGRADOURO = "Avenida Uncle Bob";
-    private final String CEP = "78.000-000";
-    private final int NUMERO = 1550;
+    private final String LOGRADOURO1 = "Avenida Uncle Bob";
+    private final String LOGRADOURO2 = "Rua Ane Frank";
+    private final String CEP1 = "78.000-000";
+    private final String CEP2 = "80.800-800";
+    private final int NUMERO1 = 1550;
+    private final int NUMERO2 = 5555;
     private final TipoEnderecoEnum TIPO1 = TipoEnderecoEnum.PRINCIPAL;
     private final TipoEnderecoEnum TIPO2 = TipoEnderecoEnum.SECUNDARIO;
-    private final String CIDADE = "Nova York";
-    private final String NOME = "Robert Cecil Martin";
-    private final LocalDate DATA_NASCIMENTO = LocalDate.of(1952, 12, 05);
+    private final String CIDADE1 = "Nova York";
+    private final String CIDADE2 = "Istambul";
+    private final String NOME1 = "Robert Cecil Martin";
+    private final String NOME2 = "Jeff Sutherland";
+    private final LocalDate DATA_NASCIMENTO1 = LocalDate.of(1952, 12, 5);
+    private final LocalDate DATA_NASCIMENTO2 = LocalDate.of(1985, 8, 15);
 
     private UriComponentsBuilder uriComponentsBuilder;
-    private EnderecoDTO enderecoDTO;
-    private EnderecoDTO enderecoDTO1;
     private PessoaDTO pessoaDTO1;
+    private PessoaDTO pessoaDTO2;
     private PessoaEntity pessoaEntity1;
 
     @Autowired
@@ -53,22 +58,24 @@ class PessoaControllerTest {
         uriComponentsBuilder = UriComponentsBuilder.newInstance();
 
         var enderecoEntity1 = EnderecoEntity.builder()
-                .logradouro(LOGRADOURO)
-                .cep(CEP)
-                .numero(NUMERO)
+                .logradouro(LOGRADOURO1)
+                .cep(CEP1)
+                .numero(NUMERO1)
                 .tipo(TIPO1)
-                .cidade(CIDADE)
+                .cidade(CIDADE1)
                 .build();
 
         pessoaEntity1 = PessoaEntity.builder()
-                .nome(NOME)
-                .dataNascimento(DATA_NASCIMENTO)
+                .nome(NOME1)
+                .dataNascimento(DATA_NASCIMENTO1)
                 .enderecos(List.of(enderecoEntity1))
                 .build();
 
-        enderecoDTO = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO1, CIDADE);
-        enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO2, CIDADE);
-        pessoaDTO1 = new PessoaDTO(null, NOME, DATA_NASCIMENTO, List.of(enderecoDTO, enderecoDTO1));
+        var enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO1, CEP1, NUMERO1, TIPO1, CIDADE1);
+        var enderecoDTO2 = new EnderecoDTO(null, LOGRADOURO2, CEP2, NUMERO2, TIPO2, CIDADE2);
+        pessoaDTO1 = new PessoaDTO(null, NOME1, DATA_NASCIMENTO1, List.of(enderecoDTO1, enderecoDTO2));
+
+        pessoaDTO2 = new PessoaDTO(null, NOME2, DATA_NASCIMENTO2, List.of(enderecoDTO2));
     }
 
     @Test
@@ -83,11 +90,11 @@ class PessoaControllerTest {
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(PessoaDTO.class, response.getBody().getClass());
 
-        Assertions.assertEquals(LOGRADOURO, response.getBody().enderecos().get(0).logradouro());
-        Assertions.assertEquals(CEP, response.getBody().enderecos().get(0).cep());
-        Assertions.assertEquals(NUMERO, response.getBody().enderecos().get(0).numero());
-        Assertions.assertEquals(NOME, response.getBody().nome());
-        Assertions.assertEquals(DATA_NASCIMENTO, response.getBody().dataNascimento());
+        Assertions.assertEquals(LOGRADOURO1, response.getBody().enderecos().get(0).logradouro());
+        Assertions.assertEquals(CEP1, response.getBody().enderecos().get(0).cep());
+        Assertions.assertEquals(NUMERO1, response.getBody().enderecos().get(0).numero());
+        Assertions.assertEquals(NOME1, response.getBody().nome());
+        Assertions.assertEquals(DATA_NASCIMENTO1, response.getBody().dataNascimento());
 
         this.pessoaRepositoryJPA.deleteById(response.getBody().id());
     }
@@ -120,6 +127,25 @@ class PessoaControllerTest {
 
         Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(PessoaDTO.class, response.getBody().getClass());
+    }
+
+    @Test
+    @DisplayName("Update - Fluxo Principal")
+    void update_returnResponseEntityDePessoaDTOComHttp200() {
+        var pessoaSalva = this.pessoaRepositoryJPA.save(pessoaEntity1);
+        var response = this.controller.update(pessoaSalva.getId(), pessoaDTO2);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(PessoaDTO.class, response.getBody().getClass());
+
+        Assertions.assertNotEquals(NOME1, NOME2);
+        Assertions.assertNotEquals(pessoaSalva.getNome(), response.getBody().nome());
+        Assertions.assertNotEquals(DATA_NASCIMENTO1, DATA_NASCIMENTO2);
+        Assertions.assertNotEquals(pessoaSalva.getDataNascimento(), response.getBody().dataNascimento());
     }
 
 //    @Test

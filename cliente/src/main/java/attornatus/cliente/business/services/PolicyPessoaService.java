@@ -9,7 +9,7 @@ import java.util.List;
 public sealed interface PolicyPessoaService<T extends PolicyDTO<ID>, ID> permits PessoaService {
 
     T create(T dto);
-    T update(T dto);
+    T update(ID id, T dto);
     T findById(ID id);
     List<T> findAll();
 }
