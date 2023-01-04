@@ -47,5 +47,13 @@ public final class TratamentoDeExceptions {
                 .badRequest()
                 .body(new RetornoPadraoDeException(HttpStatus.BAD_REQUEST.toString(), null, null, malFeita.getMessage()));
     }
+
+    @ExceptionHandler(ExceptionTipoEnderecoPrincipalUnico.class)
+    public ResponseEntity<RetornoPadraoDeException> capturarExceptionRegraTipoEnderecoPrincipalUnico(ExceptionTipoEnderecoPrincipalUnico principalUnico) {
+
+        return ResponseEntity
+                .badRequest()
+                .body(new RetornoPadraoDeException(HttpStatus.BAD_REQUEST.toString(), null, "tipo", principalUnico.getMessage()));
+    }
 }
 

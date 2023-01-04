@@ -1,10 +1,11 @@
 package attornatus.cliente.business.services;
 
 import attornatus.cliente.business.entities.PessoaEntity;
+import attornatus.cliente.business.entities.TipoEnderecoEnum;
 import attornatus.cliente.business.exceptions.ExceptionEntidadeNaoEncontrada;
+import attornatus.cliente.business.exceptions.ExceptionTipoEnderecoPrincipalUnico;
 import attornatus.cliente.business.ports.PolicyPessoaRepository;
 import attornatus.cliente.presentation.dtos.PessoaDTO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -25,6 +26,8 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
     @Override
     public PessoaDTO create(PessoaDTO dto) {
 
+        validacaoDeRegraDeTipoPrincipalUnico(dto);
+
         return Optional.of(dto)
                 .map(PessoaEntity::new)
                 .map(pessoaNova -> {
@@ -33,6 +36,15 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
                 })
                 .map(PessoaDTO::new)
                 .orElseThrow();
+    }
+
+    private void validacaoDeRegraDeTipoPrincipalUnico(PessoaDTO dto) {
+
+        if(dto.enderecos().stream()
+                        .filter(endereco -> endereco.tipo().equals(TipoEnderecoEnum.PRINCIPAL))
+                        .toList()
+                        .size() > 1)
+            throw new ExceptionTipoEnderecoPrincipalUnico("Permitido apenas um endereço principal.");
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
