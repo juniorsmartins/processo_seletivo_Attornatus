@@ -46,6 +46,7 @@ public final class PessoaController extends PolicyPessoaController<PessoaDTO, Lo
     public ResponseEntity<List<PessoaDTO>> findAll() {
 
         var pessoas = this.service.findAll();
+
         if(pessoas.isEmpty())
             return ResponseEntity
                     .noContent()

@@ -85,7 +85,7 @@ class PessoaControllerTest {
     @Test
     @DisplayName("FindAll - Fluxo Principal")
     void findAll_returnResponseEntityDeListaDePessoasDTOComHttp200() {
-        var pessoa = this.controller.create(pessoaDTO1, uriComponentsBuilder);
+        var pessoaSalva = this.controller.create(pessoaDTO1, uriComponentsBuilder);
         var response = this.controller.findAll();
 
         Assertions.assertNotNull(response);
@@ -95,7 +95,7 @@ class PessoaControllerTest {
         Assertions.assertNotNull(response.getBody().get(0).getClass());
         Assertions.assertEquals(PessoaDTO.class, response.getBody().get(0).getClass());
 
-        this.pessoaRepositoryJPA.deleteById(pessoa.getBody().id());
+        this.pessoaRepositoryJPA.deleteById(pessoaSalva.getBody().id());
     }
 
 //    @Test

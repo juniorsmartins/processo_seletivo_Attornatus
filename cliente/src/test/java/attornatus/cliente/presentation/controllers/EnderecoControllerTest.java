@@ -67,7 +67,7 @@ class EnderecoControllerTest {
     }
 
     @Test
-    @DisplayName("Fluxo Principal - Caminho feliz.")
+    @DisplayName("Create - Fluxo Principal")
     void create_returnResponseEntityDeEnderecoDTOComHttp201() {
         var pessoaSalva = this.pessoaRepositoryJPA.save(pessoaEntity1);
         var pessoaId = pessoaSalva.getId();
@@ -86,5 +86,21 @@ class EnderecoControllerTest {
         Assertions.assertEquals(NUMERO, response.getBody().numero());
 
         this.pessoaRepositoryJPA.deleteById(pessoaId);
+    }
+
+    @Test
+    @DisplayName("FindAll - Fluxo Principal")
+    void findAll_returnResponseEntityDeListaDeEnderecosDTOComHttp200() {
+        var pessoaSalva = this.pessoaRepositoryJPA.save(pessoaEntity1);
+        var response = this.controller.findAll();
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        Assertions.assertNotNull(response.getBody().get(0).getClass());
+        Assertions.assertEquals(EnderecoDTO.class, response.getBody().get(0).getClass());
+
+        this.pessoaRepositoryJPA.deleteById(pessoaSalva.getId());
     }
 }
