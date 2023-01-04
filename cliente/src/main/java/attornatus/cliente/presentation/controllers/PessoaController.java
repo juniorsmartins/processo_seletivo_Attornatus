@@ -22,19 +22,25 @@ public final class PessoaController extends PolicyPessoaController<PessoaDTO, Lo
 
     @Override
     public ResponseEntity<PessoaDTO> create(@RequestBody @Valid PessoaDTO dto, UriComponentsBuilder uriComponentsBuilder) {
-        var pessoa = this.service.create(dto);
+
+        var pessoaSalva = this.service.create(dto);
 
         return ResponseEntity
                 .created(uriComponentsBuilder
                         .path("v1/pessoas/{id}")
-                        .buildAndExpand(pessoa.id())
+                        .buildAndExpand(pessoaSalva.id())
                         .toUri())
-                .body(pessoa);
+                .body(pessoaSalva);
     }
 
     @Override
-    public ResponseEntity<PessoaDTO> update(@RequestBody @Valid PessoaDTO dto) {
-        return null;
+    public ResponseEntity<PessoaDTO> update(@PathVariable(name = "id") Long id, @RequestBody @Valid PessoaDTO dto) {
+
+        var pessoaAtualizada = this.service.update(id, dto);
+
+        return ResponseEntity
+                .ok()
+                .body(pessoaAtualizada);
     }
 
     @Override

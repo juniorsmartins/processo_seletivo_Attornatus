@@ -17,7 +17,6 @@ public class PessoaRepositoryImpl implements PolicyPessoaRepository<PessoaEntity
     @Autowired
     private PessoaRepositoryJPA pessoaRepositoryJPA;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     @Override
     public PessoaEntity save(PessoaEntity entity) {
         return this.pessoaRepositoryJPA.save(entity);

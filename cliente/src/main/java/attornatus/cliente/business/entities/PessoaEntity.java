@@ -30,7 +30,7 @@ public final class PessoaEntity implements PolicyEntity<Long>, Serializable {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-    @OneToMany(mappedBy = "pessoa", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER, targetEntity = EnderecoEntity.class)
+    @OneToMany(mappedBy = "pessoa", cascade = {CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.EAGER, targetEntity = EnderecoEntity.class)
     private List<EnderecoEntity> enderecos;
 
     public PessoaEntity(PessoaDTO dto) {
