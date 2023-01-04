@@ -34,6 +34,16 @@ public final class EnderecoController extends PolicyEnderecoController<EnderecoD
 
     @Override
     public ResponseEntity<List<EnderecoDTO>> findAll() {
-        return null;
+
+        var enderecos = this.enderecoService.findAll();
+
+        if(enderecos.isEmpty())
+            return ResponseEntity
+                    .noContent()
+                    .build();
+
+        return ResponseEntity
+                .ok()
+                .body(enderecos);
     }
 }

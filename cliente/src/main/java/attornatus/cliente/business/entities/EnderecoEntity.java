@@ -1,7 +1,6 @@
 package attornatus.cliente.business.entities;
 
 import attornatus.cliente.presentation.dtos.EnderecoDTO;
-import attornatus.cliente.presentation.dtos.PessoaDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,6 +34,9 @@ public final class EnderecoEntity implements PolicyEntity<Long>, Serializable {
     @Enumerated(EnumType.STRING)
     private TipoEnderecoEnum tipo;
 
+    @Column(name = "cidade")
+    private String cidade;
+
     @ManyToOne
     @JoinColumn(name = "pessoa_id", referencedColumnName = "id")
     private PessoaEntity pessoa;
@@ -44,5 +46,6 @@ public final class EnderecoEntity implements PolicyEntity<Long>, Serializable {
         this.cep = dto.cep();
         this.numero = dto.numero();
         this.tipo = dto.tipo();
+        this.cidade = dto.cidade();
     }
 }
