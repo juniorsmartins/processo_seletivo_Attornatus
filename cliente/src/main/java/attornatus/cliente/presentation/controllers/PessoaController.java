@@ -44,6 +44,15 @@ public final class PessoaController extends PolicyPessoaController<PessoaDTO, Lo
 
     @Override
     public ResponseEntity<List<PessoaDTO>> findAll() {
-        return null;
+
+        var pessoas = this.service.findAll();
+        if(pessoas.isEmpty())
+            return ResponseEntity
+                    .noContent()
+                    .build();
+
+        return ResponseEntity
+                .ok()
+                .body(pessoas);
     }
 }
