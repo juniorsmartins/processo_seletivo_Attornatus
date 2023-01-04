@@ -1,5 +1,6 @@
 package attornatus.cliente.presentation.dtos;
 
+import attornatus.cliente.business.entities.PessoaEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -13,6 +14,8 @@ import jakarta.validation.constraints.PastOrPresent;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PessoaDTO
@@ -32,7 +35,18 @@ public record PessoaDTO
 
         @NotNull
         @Valid
-        EnderecoDTO endereco
+        List<EnderecoDTO> enderecos
     ) implements PolicyDTO<Long>
-{ }
+{
+    public PessoaDTO(PessoaEntity entity) {
+        this(entity.getId(),
+                entity.getNome(),
+                entity.getDataNascimento(),
+                entity.getEnderecos()
+                        .stream()
+                        .map(EnderecoDTO::new)
+                        .collect(Collectors.toList())
+        );
+    }
+}
 

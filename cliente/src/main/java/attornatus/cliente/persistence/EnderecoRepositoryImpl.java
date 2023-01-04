@@ -1,29 +1,29 @@
 package attornatus.cliente.persistence;
 
 import attornatus.cliente.business.entities.EnderecoEntity;
-import attornatus.cliente.business.ports.PolicyRepository;
+import attornatus.cliente.business.ports.PolicyEnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-public class EnderecoRepositoryImpl implements PolicyRepository<EnderecoEntity, Long> {
+@Repository
+public class EnderecoRepositoryImpl implements PolicyEnderecoRepository<EnderecoEntity, Long> {
 
     @Autowired
     private EnderecoRepositoryJPA enderecoRepositoryJPA;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     @Override
     public EnderecoEntity save(EnderecoEntity entity) {
-        return null;
-    }
-
-    @Override
-    public Optional<EnderecoEntity> find(Long aLong) {
-        return Optional.empty();
+        return this.enderecoRepositoryJPA.save(entity);
     }
 
     @Override
     public List<EnderecoEntity> findAll() {
-        return null;
+        return this.enderecoRepositoryJPA.findAll();
     }
 }
