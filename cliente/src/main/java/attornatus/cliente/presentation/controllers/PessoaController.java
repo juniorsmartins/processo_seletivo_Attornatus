@@ -39,7 +39,12 @@ public final class PessoaController extends PolicyPessoaController<PessoaDTO, Lo
 
     @Override
     public ResponseEntity<PessoaDTO> findById(@PathVariable(name = "id") Long id) {
-        return null;
+
+        var pessoaEncontrada = this.service.findById(id);
+
+        return ResponseEntity
+                .ok()
+                .body(pessoaEncontrada);
     }
 
     @Override

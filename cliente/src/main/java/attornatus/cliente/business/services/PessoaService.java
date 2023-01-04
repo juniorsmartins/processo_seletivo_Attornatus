@@ -37,7 +37,10 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
 
     @Override
     public PessoaDTO findById(Long id) {
-        return null;
+
+        return this.repository.findById(id)
+                .map(PessoaDTO::new)
+                .orElseThrow(() -> new ExceptionEntidadeNaoEncontrada(String.format("Não encontrada Pessoa com id: %d.")));
     }
 
     @Override

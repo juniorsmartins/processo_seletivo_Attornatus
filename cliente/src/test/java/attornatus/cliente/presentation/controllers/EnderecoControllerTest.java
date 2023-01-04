@@ -32,7 +32,6 @@ class EnderecoControllerTest {
     private final LocalDate DATA_NASCIMENTO = LocalDate.of(1952, 12, 05);
 
     private EnderecoDTO enderecoDTO1;
-    private EnderecoEntity enderecoEntity1;
     private PessoaEntity pessoaEntity1;
 
     private UriComponentsBuilder uriComponentsBuilder;
@@ -50,7 +49,7 @@ class EnderecoControllerTest {
     void criadorDeCenarios() {
         uriComponentsBuilder = UriComponentsBuilder.newInstance();
 
-        enderecoEntity1 = EnderecoEntity.builder()
+        var enderecoEntity1 = EnderecoEntity.builder()
                 .logradouro(LOGRADOURO)
                 .cep(CEP)
                 .numero(NUMERO)
