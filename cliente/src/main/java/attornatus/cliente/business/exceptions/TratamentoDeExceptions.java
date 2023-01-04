@@ -19,7 +19,7 @@ public final class TratamentoDeExceptions {
     private MessageSource mensagemInternacionalizada;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<RetornoPadraoDeException>> capturaDeExceptionDeValidacao(MethodArgumentNotValidException notValid) {
+    public ResponseEntity<List<RetornoPadraoDeException>> capturarExceptionDeValidacao(MethodArgumentNotValidException notValid) {
 
         List<RetornoPadraoDeException> errors = new ArrayList<>();
         notValid.getBindingResult().getFieldErrors().forEach(err -> {
@@ -31,4 +31,21 @@ public final class TratamentoDeExceptions {
                 .badRequest()
                 .body(errors);
     }
+
+    @ExceptionHandler(ExceptionEntidadeNaoEncontrada.class)
+    public ResponseEntity<RetornoPadraoDeException> capturarExceptionDeEntidadeNaoEncontrada(ExceptionEntidadeNaoEncontrada naoEncontrada) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new RetornoPadraoDeException(HttpStatus.NOT_FOUND.toString(), null, null, naoEncontrada.getMessage()));
+    }
+
+    @ExceptionHandler(ExceptionRequisicaoMalFeita.class)
+    public ResponseEntity<RetornoPadraoDeException> capturarExceptionDeRequisicaoMalFeita(ExceptionRequisicaoMalFeita malFeita) {
+
+        return ResponseEntity
+                .badRequest()
+                .body(new RetornoPadraoDeException(HttpStatus.BAD_REQUEST.toString(), null, null, malFeita.getMessage()));
+    }
 }
+

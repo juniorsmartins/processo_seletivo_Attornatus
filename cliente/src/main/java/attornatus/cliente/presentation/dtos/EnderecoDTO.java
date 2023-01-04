@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.List;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record EnderecoDTO
     (
