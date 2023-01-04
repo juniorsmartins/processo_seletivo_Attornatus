@@ -4,6 +4,7 @@ import attornatus.cliente.business.entities.PessoaEntity;
 import attornatus.cliente.business.entities.TipoEnderecoEnum;
 import attornatus.cliente.business.exceptions.ExceptionEntidadeNaoEncontrada;
 import attornatus.cliente.business.exceptions.ExceptionTipoEnderecoPrincipalUnico;
+import attornatus.cliente.business.exceptions.MensagemPadrao;
 import attornatus.cliente.business.ports.PolicyPessoaRepository;
 import attornatus.cliente.presentation.dtos.PessoaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
                         .filter(endereco -> endereco.getTipo().equals(TipoEnderecoEnum.PRINCIPAL))
                         .toList()
                         .size() > 1)
-            throw new ExceptionTipoEnderecoPrincipalUnico("Permitido apenas um endereço principal.");
+            throw new ExceptionTipoEnderecoPrincipalUnico(MensagemPadrao.TIPO_ENDERECO_PRINCIPAL_UNICO);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
@@ -70,7 +71,7 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
                     return pessoaDatabase;
                 })
                 .map(PessoaDTO::new)
-                .orElseThrow(() -> new ExceptionEntidadeNaoEncontrada(String.format("Não encontrada Pessoa com id: %d.", id)));
+                .orElseThrow(() -> new ExceptionEntidadeNaoEncontrada(MensagemPadrao.PESSOA_NAO_ENCONTRADA));
     }
 
     @Override
