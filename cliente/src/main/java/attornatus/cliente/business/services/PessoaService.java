@@ -26,11 +26,10 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
     @Override
     public PessoaDTO create(PessoaDTO dto) {
 
-        validacaoDeRegraDeTipoPrincipalUnico(dto);
-
         return Optional.of(dto)
                 .map(PessoaEntity::new)
                 .map(pessoaNova -> {
+                    validacaoDeRegraDeTipoPrincipalUnico(pessoaNova);
                     pessoaNova.getEnderecos().forEach(endereco -> endereco.setPessoa(pessoaNova));
                     return this.repository.save(pessoaNova);
                 })
@@ -38,10 +37,10 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
                 .orElseThrow();
     }
 
-    private void validacaoDeRegraDeTipoPrincipalUnico(PessoaDTO dto) {
+    private void validacaoDeRegraDeTipoPrincipalUnico(PessoaEntity entity) {
 
-        if(dto.enderecos().stream()
-                        .filter(endereco -> endereco.tipo().equals(TipoEnderecoEnum.PRINCIPAL))
+        if(entity.getEnderecos().stream()
+                        .filter(endereco -> endereco.getTipo().equals(TipoEnderecoEnum.PRINCIPAL))
                         .toList()
                         .size() > 1)
             throw new ExceptionTipoEnderecoPrincipalUnico("Permitido apenas um endereço principal.");
@@ -67,6 +66,7 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
                             }
                         });
                     });
+                    validacaoDeRegraDeTipoPrincipalUnico(pessoaDatabase);
                     return pessoaDatabase;
                 })
                 .map(PessoaDTO::new)
