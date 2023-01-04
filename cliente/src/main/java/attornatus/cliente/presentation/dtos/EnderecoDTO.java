@@ -23,10 +23,20 @@ public record EnderecoDTO
         int numero,
 
         @NotNull
-        TipoEnderecoEnum tipo
+        TipoEnderecoEnum tipo,
+
+        @NotBlank
+        @Length(max = 200)
+        String cidade
     ) implements PolicyDTO<Long>
 {
     public EnderecoDTO(EnderecoEntity entities) {
-        this(entities.getId(), entities.getLogradouro(), entities.getCep(), entities.getNumero(), entities.getTipo());
+        this(entities.getId(),
+            entities.getLogradouro(),
+            entities.getCep(),
+            entities.getNumero(),
+            entities.getTipo(),
+            entities.getCidade());
     }
 }
+

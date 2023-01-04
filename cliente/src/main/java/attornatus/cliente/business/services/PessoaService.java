@@ -7,6 +7,7 @@ import attornatus.cliente.presentation.dtos.PessoaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,11 +37,19 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
 
     @Override
     public PessoaDTO findById(Long id) {
-        return null;
+
+        return this.repository.findById(id)
+                .map(PessoaDTO::new)
+                .orElseThrow(() -> new ExceptionEntidadeNaoEncontrada(String.format("Não encontrada Pessoa com id: %d.")));
     }
 
     @Override
     public List<PessoaDTO> findAll() {
-        return null;
+
+        return this.repository.findAll()
+                .stream()
+                .map(PessoaDTO::new)
+                .sorted(Comparator.comparing(PessoaDTO::id).reversed())
+                .toList();
     }
 }

@@ -7,6 +7,7 @@ import attornatus.cliente.persistence.EnderecoRepositoryJPA;
 import attornatus.cliente.persistence.PessoaRepositoryJPA;
 import attornatus.cliente.presentation.dtos.EnderecoDTO;
 import attornatus.cliente.presentation.dtos.PessoaDTO;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,11 +29,11 @@ class EnderecoControllerTest {
     private final int NUMERO = 1550;
     private final TipoEnderecoEnum TIPO1 = TipoEnderecoEnum.PRINCIPAL;
     private final TipoEnderecoEnum TIPO2 = TipoEnderecoEnum.SECUNDARIO;
+    private final String CIDADE = "Nova York";
     private final String NOME = "Robert Cecil Martin";
     private final LocalDate DATA_NASCIMENTO = LocalDate.of(1952, 12, 05);
 
     private EnderecoDTO enderecoDTO1;
-    private EnderecoEntity enderecoEntity1;
     private PessoaEntity pessoaEntity1;
 
     private UriComponentsBuilder uriComponentsBuilder;
@@ -50,11 +51,12 @@ class EnderecoControllerTest {
     void criadorDeCenarios() {
         uriComponentsBuilder = UriComponentsBuilder.newInstance();
 
-        enderecoEntity1 = EnderecoEntity.builder()
+        var enderecoEntity1 = EnderecoEntity.builder()
                 .logradouro(LOGRADOURO)
                 .cep(CEP)
                 .numero(NUMERO)
                 .tipo(TIPO1)
+                .cidade(CIDADE)
                 .build();
 
         pessoaEntity1 = PessoaEntity.builder()
@@ -63,11 +65,11 @@ class EnderecoControllerTest {
                 .enderecos(List.of(enderecoEntity1))
                 .build();
 
-        enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO2);
+        enderecoDTO1 = new EnderecoDTO(null, LOGRADOURO, CEP, NUMERO, TIPO2, CIDADE);
     }
 
     @Test
-    @DisplayName("Fluxo Principal - Caminho feliz.")
+    @DisplayName("Create - Fluxo Principal")
     void create_returnResponseEntityDeEnderecoDTOComHttp201() {
         var pessoaSalva = this.pessoaRepositoryJPA.save(pessoaEntity1);
         var pessoaId = pessoaSalva.getId();
@@ -84,7 +86,25 @@ class EnderecoControllerTest {
         Assertions.assertEquals(LOGRADOURO, response.getBody().logradouro());
         Assertions.assertEquals(CEP, response.getBody().cep());
         Assertions.assertEquals(NUMERO, response.getBody().numero());
+        Assertions.assertEquals(TIPO2, response.getBody().tipo());
+        Assertions.assertEquals(CIDADE, response.getBody().cidade());
 
         this.pessoaRepositoryJPA.deleteById(pessoaId);
+    }
+
+    @Test
+    @DisplayName("FindAll - Fluxo Principal")
+    void findAll_returnResponseEntityDeListaDeEnderecosDTOComHttp200() {
+        var pessoaSalva = this.pessoaRepositoryJPA.save(pessoaEntity1);
+        var response = this.controller.findAll();
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        Assertions.assertNotNull(response.getBody().get(0).getClass());
+        Assertions.assertEquals(EnderecoDTO.class, response.getBody().get(0).getClass());
+
+        this.pessoaRepositoryJPA.deleteById(pessoaSalva.getId());
     }
 }
