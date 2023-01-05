@@ -1,10 +1,12 @@
 package attornatus.cliente.business.services;
 
 import attornatus.cliente.business.entities.PessoaEntity;
+import attornatus.cliente.business.entities.TipoEnderecoEnum;
 import attornatus.cliente.business.exceptions.ExceptionEntidadeNaoEncontrada;
+import attornatus.cliente.business.exceptions.ExceptionTipoEnderecoPrincipalUnico;
+import attornatus.cliente.business.exceptions.MensagemPadrao;
 import attornatus.cliente.business.ports.PolicyPessoaRepository;
 import attornatus.cliente.presentation.dtos.PessoaDTO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -28,11 +30,21 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
         return Optional.of(dto)
                 .map(PessoaEntity::new)
                 .map(pessoaNova -> {
+                    validacaoDeRegraDeTipoPrincipalUnico(pessoaNova);
                     pessoaNova.getEnderecos().forEach(endereco -> endereco.setPessoa(pessoaNova));
                     return this.repository.save(pessoaNova);
                 })
                 .map(PessoaDTO::new)
                 .orElseThrow();
+    }
+
+    private void validacaoDeRegraDeTipoPrincipalUnico(PessoaEntity entity) {
+
+        if(entity.getEnderecos().stream()
+                        .filter(endereco -> endereco.getTipo().equals(TipoEnderecoEnum.PRINCIPAL))
+                        .toList()
+                        .size() > 1)
+            throw new ExceptionTipoEnderecoPrincipalUnico(MensagemPadrao.TIPO_ENDERECO_PRINCIPAL_UNICO);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
@@ -55,10 +67,11 @@ public non-sealed class PessoaService implements PolicyPessoaService<PessoaDTO, 
                             }
                         });
                     });
+                    validacaoDeRegraDeTipoPrincipalUnico(pessoaDatabase);
                     return pessoaDatabase;
                 })
                 .map(PessoaDTO::new)
-                .orElseThrow(() -> new ExceptionEntidadeNaoEncontrada(String.format("Não encontrada Pessoa com id: %d.", id)));
+                .orElseThrow(() -> new ExceptionEntidadeNaoEncontrada(MensagemPadrao.PESSOA_NAO_ENCONTRADA));
     }
 
     @Override

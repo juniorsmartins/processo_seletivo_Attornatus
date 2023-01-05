@@ -6,8 +6,6 @@ import attornatus.cliente.business.entities.TipoEnderecoEnum;
 import attornatus.cliente.persistence.EnderecoRepositoryJPA;
 import attornatus.cliente.persistence.PessoaRepositoryJPA;
 import attornatus.cliente.presentation.dtos.EnderecoDTO;
-import attornatus.cliente.presentation.dtos.PessoaDTO;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
