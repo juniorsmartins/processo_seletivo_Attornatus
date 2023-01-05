@@ -132,14 +132,4 @@ class PessoaServiceTest {
 
         Mockito.verify(this.repository, Mockito.times(1)).findById(Mockito.any());
     }
-
-    @Test
-    @DisplayName("")
-    void findById() {
-    }
-
-    @Test
-    @DisplayName("")
-    void findAll() {
-    }
 }
