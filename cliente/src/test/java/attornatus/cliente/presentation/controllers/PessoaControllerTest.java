@@ -50,9 +50,6 @@ class PessoaControllerTest {
     @Autowired
     private PessoaRepositoryJPA pessoaRepositoryJPA;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @BeforeEach
     void criadorDeCenarios() {
         uriComponentsBuilder = UriComponentsBuilder.newInstance();
@@ -147,25 +144,6 @@ class PessoaControllerTest {
         Assertions.assertNotEquals(DATA_NASCIMENTO1, DATA_NASCIMENTO2);
         Assertions.assertNotEquals(pessoaSalva.getDataNascimento(), response.getBody().dataNascimento());
     }
-
-//    @Test
-//    @DisplayName("Fluxo de Exception - Testa Bean Validation em Pessoa.")
-//    void create_returnResponseEntityDeErroPadraoComHttp400() {
-//
-//        thrown.expect(MethodArgumentNotValidException.class);
-//        this.controller.create(pessoaDTO2, uriComponentsBuilder);
-//    }
-
-//    @Test
-//    @DisplayName("Fluxo de Exception - Testa Bean Validation em Endereço.")
-//    void create3_returnResponseEntityDeErroPadraoComHttp400() {
-//
-//        Throwable response = org.assertj.core.api.Assertions.catchThrowable(() -> {
-//            this.controller.create(pessoaDTO3, uriComponentsBuilder);
-//        });
-//
-//        org.assertj.core.api.Assertions.assertThat(response).isInstanceOf(MethodArgumentNotValidException.class);
-//    }
 }
 
 
